@@ -130,8 +130,7 @@ Returns:
 
 ## Setup
 
-  1. Clone the repository: `git clone 
-namebase-orderbook-coding-challenge`
+  1. Clone the repository: `git clone https://github.com/nzediegwu1/namebase-orderbook-coding-challenge.git`
   2. Install dependencies: `yarn`
   3. Run tests: `yarn test`
   4. Start the application: `yarn start`
@@ -169,8 +168,10 @@ GET /order/order-id
 GET /quantity?price=60
 ```
 
-# SUBOPTIMAL DESIGN & IMPLEMENTATION DECISIONS I MADE BUT WAS UNABLE TO FIX DUE TO TIME CONSTRAINTS
+# Suboptimal Design & Implementation Decisions I Made But was Unable to Fix Due to Time Constraints
 
-  1. I made use of array instead of **Binary Search Tree** data structure. Given a very large order book, this would require much computational resources. Binary Search Tree data structure would be a better shot and great boost to the speed of `getQuantityAtPrice` using a single lookup at the exact collection the data is sorted. However I queried the `buy-orders` collection first, and when not found, I then queried the `sell-orders` collection, which is not a very efficient approach. With Binary Search Tree, I do not need to search both tables since data is ordered and I can check the max price in each order table without scanning through them, which would help to determine whether a collection should be searched or not
+  1. I made use of array instead of **Binary Search Tree** data structure. Given a very large order book, this would require much computational resources. Binary Search Tree data structure would be a better shot with great boost to the speed of `getQuantityAtPrice` using a single lookup at the exact collection the data is stored. However I queried the `buy-orders` collection first, and when not found, I then queried the `sell-orders` collection, which is not a very efficient approach. With Binary Search Tree, I do not need to search both tables since data is ordered and I can check the max price in each order table without scanning through them, hence determine whether a collection should be searched or not
   
   2. I implemented `getOrderById` functionality by invoking `Array.find` method, which loops through the array while searching for the order. With a million record order book, this would be highly inefficient. Given more time, I would implement indexing for the id field, so that `getOrderById` operation becomes super fast
+
+  3. I had to change things & make use of synchronous `writeFileSync` node.js `fs` method for writing file to my JSON db, instead of the `writeFile` I initially used for asynchronous, faster & non-blocking I/O. This was because tests were crashing when `fs.writeFile` was used and `fs.writeFile` implementation was difficult to mock/replace within test considering time constraints
